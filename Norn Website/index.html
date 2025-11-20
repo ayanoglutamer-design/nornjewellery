@@ -1,0 +1,96 @@
+<!doctype html>
+</div>
+</div>
+`;
+
+
+// thumbnails
+const thumbs = document.getElementById('thumbs');
+product.images.forEach((src,idx)=>{
+const b = document.createElement('button');
+b.innerHTML = `<img src="${src}" alt="thumb-${idx}" loading="lazy">`;
+b.addEventListener('click',()=>{document.getElementById('main-photo').src = src});
+thumbs.appendChild(b);
+});
+
+
+// qty controls
+let qty = 1;
+document.getElementById('qty-inc').addEventListener('click',()=>{qty++;document.getElementById('qty-val').innerText = qty});
+document.getElementById('qty-dec').addEventListener('click',()=>{if(qty>1) qty--;document.getElementById('qty-val').innerText = qty});
+
+
+document.getElementById('add-to-cart').addEventListener('click',()=>{
+showToast(`${product.title} — ${formatPrice(product.price)} added to cart (x${qty})`);
+// Placeholder: connect to real cart or checkout flow
+});
+}
+
+
+/* ---------- Contact & About ---------- */
+function renderContact(){
+outlet.innerHTML = `
+<div class="container">
+<h2 class="section-title">Contact</h2>
+<p class="muted">For bespoke orders and press: <strong>hello@lux.example</strong></p>
+<form style="margin-top:18px;max-width:640px" onsubmit="event.preventDefault();showToast('Message sent — we will reply shortly')">
+<label style="display:block;margin-bottom:8px">Name
+<input required style="width:100%;padding:10px;margin-top:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff">
+</label>
+<label style="display:block;margin-bottom:8px">Message
+<textarea required style="width:100%;padding:10px;margin-top:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff;min-height:120px"></textarea>
+</label>
+<button class="primary-cta" type="submit">Send</button>
+</form>
+</div>
+`;
+}
+
+
+function renderAbout(){
+outlet.innerHTML = `
+<div class="container">
+<h2 class="section-title">About Us</h2>
+<p class="muted">LUX is a small atelier focused on slow-design, traditional hand-finishing, and modern silhouettes. Each piece is made to last and intended to travel between generations.</p>
+<p style="margin-top:18px">Narratives, micro-interactions, and spacing are chosen to reflect craftsmanship and quality. Replace copy with your brand voice.</p>
+</div>
+`;
+}
+
+
+/* ---------- Toast ---------- */
+const toastEl = document.getElementById('toast');
+let toastTimer;
+function showToast(text){
+toastEl.textContent = text;
+toastEl.classList.add('show');
+clearTimeout(toastTimer);
+toastTimer = setTimeout(()=>{toastEl.classList.remove('show')},3000);
+}
+
+
+/* ---------- Link handling (single-page navigation) ---------- */
+window.addEventListener('hashchange', renderRoute);
+document.addEventListener('click', (e)=>{
+const a = e.target.closest('[data-link]');
+if(a){e.preventDefault();const href = a.getAttribute('href')||a.getAttribute('data-href'); if(href) navTo(href)}
+});
+
+
+// initial render
+renderRoute();
+
+
+/* ---------- Accessibility: pause video on reduced motion ---------- */
+if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+const vid = document.getElementById('bgvid'); if(vid) vid.pause();
+}
+
+
+/* ---------- Quick notes ---------- */
+console.log('LUX demo loaded. Replace /assets/* with your real images and hero-video.mp4 before deploy.');
+
+
+</script>
+</body>
+</html>
